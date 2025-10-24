@@ -1,7 +1,7 @@
 'use client'
 
-import { useSupabaseAuth } from '@/components/supabase-auth-provider'
-import { Sidebar } from '@/components/sidebar'
+import { useSupabaseAuth } from '@/components/auth/supabase-auth-provider'
+import { Sidebar } from '@/components/layout/sidebar'
 import { redirect } from 'next/navigation'
 import { 
   HelpCircle, 
@@ -22,13 +22,13 @@ import {
   RotateCcw,
   Search
 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Input } from '@/components/ui/input'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { KeyboardShortcuts } from '@/components/keyboard-shortcuts'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/layout/card'
+import { Button } from '@/components/ui/forms/button'
+import { Badge } from '@/components/ui/display/badge'
+import { Separator } from '@/components/ui/layout/separator'
+import { Input } from '@/components/ui/forms/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/layout/tabs'
+import { KeyboardShortcuts } from '@/components/misc/keyboard-shortcuts'
 
 export default function HelpPage() {
   const { user, loading } = useSupabaseAuth()

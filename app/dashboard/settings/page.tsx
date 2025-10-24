@@ -1,15 +1,15 @@
 'use client'
 
-import { ThemeSettings } from '@/components/theme-settings'
-import { CategoryManagement } from '@/components/category-management'
-import { Sidebar } from '@/components/sidebar'
+import { ThemeSettings } from '@/components/settings/theme-settings'
+import { CategoryManagement } from '@/components/settings/category-management'
+import { Sidebar } from '@/components/layout/sidebar'
 import { Settings, User, Bell, Shield, Palette, Tags } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/layout/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/layout/tabs'
+import { Button } from '@/components/ui/forms/button'
+import { Input } from '@/components/ui/forms/input'
+import { Label } from '@/components/ui/forms/label'
+import { Switch } from '@/components/ui/forms/switch'
 
 export default function SettingsPage() {
 

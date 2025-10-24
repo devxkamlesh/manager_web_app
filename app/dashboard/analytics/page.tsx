@@ -1,19 +1,19 @@
 'use client'
 
-import { useSupabaseAuth } from '@/components/supabase-auth-provider'
-import { Analytics } from '@/components/analytics'
-import { Sidebar } from '@/components/sidebar'
+import { useSupabaseAuth } from '@/components/auth/supabase-auth-provider'
+import { Analytics } from '@/components/dashboard/analytics'
+import { Sidebar } from '@/components/layout/sidebar'
 import { redirect } from 'next/navigation'
 import { BarChart3, TrendingUp, Calendar, Download } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/forms/button'
+import { Badge } from '@/components/ui/display/badge'
 import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/components/ui/forms/select'
 
 export default function AnalyticsPage() {
   const { user, loading } = useSupabaseAuth()

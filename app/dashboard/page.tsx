@@ -1,7 +1,7 @@
 'use client'
 
-import { useSupabaseAuth } from '@/components/supabase-auth-provider'
-import { Dashboard } from '@/components/dashboard'
+import { useSupabaseAuth } from '@/components/auth/supabase-auth-provider'
+import { Dashboard } from '@/components/dashboard/dashboard'
 import { redirect } from 'next/navigation'
 
 export default function DashboardPage() {

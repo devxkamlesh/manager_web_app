@@ -1,9 +1,9 @@
 'use client'
 
-import { useSupabaseAuth } from '@/components/supabase-auth-provider'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { useSupabaseAuth } from '@/components/auth/supabase-auth-provider'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/layout/card'
+import { Badge } from '@/components/ui/display/badge'
+import { Button } from '@/components/ui/forms/button'
 import { CheckCircle, XCircle, User, Mail, Calendar, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 

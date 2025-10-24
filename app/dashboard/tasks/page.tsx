@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { TaskManager } from '@/components/task-manager'
-import { Sidebar } from '@/components/sidebar'
-import { CreateTaskDialog } from '@/components/create-task-dialog'
+import { TaskManager } from '@/components/tasks/task-manager'
+import { Sidebar } from '@/components/layout/sidebar'
+import { CreateTaskDialog } from '@/components/tasks/create-task-dialog'
 import { 
   CheckSquare, 
   Plus, 
@@ -18,14 +18,14 @@ import {
   Target
 } from 'lucide-react'
 import { useThemeStore } from '@/lib/theme-store'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/forms/button'
+import { Input } from '@/components/ui/forms/input'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@/components/ui/navigation/dropdown-menu'
 
 export default function TasksPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false)

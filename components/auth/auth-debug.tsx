@@ -1,8 +1,8 @@
 "use client"
 
-import { useSupabaseAuth } from '@/components/supabase-auth-provider'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { useSupabaseAuth } from '@/components/auth/supabase-auth-provider'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/layout/card'
+import { Button } from '@/components/ui/forms/button'
 import { supabase } from '@/lib/supabase'
 
 export function AuthDebug() {

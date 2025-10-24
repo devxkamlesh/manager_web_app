@@ -1,11 +1,11 @@
 'use client'
 
-import { ProjectOverview } from '@/components/project-overview'
-import { Sidebar } from '@/components/sidebar'
+import { ProjectOverview } from '@/components/projects/project-overview'
+import { Sidebar } from '@/components/layout/sidebar'
 import { FolderOpen, Plus, Search, CalendarDays, Filter, List, Grid3X3, Columns3 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/forms/button'
+import { Input } from '@/components/ui/forms/input'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/navigation/dropdown-menu'
 import { useState, useRef } from 'react'
 import { useThemeStore } from '@/lib/theme-store'
 

@@ -1,7 +1,7 @@
 'use client'
 
-import { useSupabaseAuth } from '@/components/supabase-auth-provider'
-import { LandingPage } from '@/components/landing-page'
+import { useSupabaseAuth } from '@/components/auth/supabase-auth-provider'
+import { LandingPage } from '@/components/layout/landing-page'
 import { redirect } from 'next/navigation'
 
 export default function Home() {
