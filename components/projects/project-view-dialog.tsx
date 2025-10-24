@@ -1,9 +1,9 @@
 "use client"
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/layout/dialog"
+import { Button } from "@/components/ui/forms/button"
+import { Badge } from "@/components/ui/display/badge"
+import { Progress } from "@/components/ui/feedback/progress"
 import { type Project } from "@/lib/project-store"
 import { useCategoryStore } from "@/lib/category-store"
 import { getIconByName } from "@/lib/icon-library"
