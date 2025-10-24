@@ -1,8 +1,8 @@
 "use client"
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/layout/card"
+import { Badge } from "@/components/ui/display/badge"
+import { Button } from "@/components/ui/forms/button"
 import { type Task } from "@/lib/task-store"
 import { useCategoryStore } from "@/lib/category-store"
 import { getIconByName } from "@/lib/icon-library"
@@ -20,7 +20,7 @@ import {
   Edit,
   Trash2
 } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/navigation/dropdown-menu"
 import { formatTimeAgo, cn } from "@/lib/utils"
 
 const canManuallyComplete = (task: Task) => {

@@ -2,8 +2,8 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/layout/card"
+import { Skeleton } from "@/components/ui/feedback/skeleton"
 
 interface LoadingStateProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string

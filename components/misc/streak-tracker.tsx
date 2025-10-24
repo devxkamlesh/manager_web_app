@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Code, BookOpen, GitCommit, Target, TrendingUp } from "lucide-react"
 import { getStreakEmoji } from "@/lib/utils"
 import { supabase } from "@/lib/supabase"
-import { useSupabaseAuth } from "@/components/supabase-auth-provider"
+import { useSupabaseAuth } from "@/components/auth/supabase-auth-provider"
 
 interface Streak {
   id: string

@@ -1,11 +1,11 @@
 "use client"
 
-import { useSupabaseAuth } from "@/components/supabase-auth-provider"
+import { useSupabaseAuth } from "@/components/auth/supabase-auth-provider"
 import { signOut } from "@/lib/auth-actions"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/forms/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/display/avatar"
+import { Badge } from "@/components/ui/display/badge"
+import { Separator } from "@/components/ui/layout/separator"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { 

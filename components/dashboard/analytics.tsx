@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts"
 import { Clock, Target, TrendingUp, Calendar, BarChart3, Zap } from "lucide-react"
 import { supabase } from "@/lib/supabase"
-import { useSupabaseAuth } from "@/components/supabase-auth-provider"
+import { useSupabaseAuth } from "@/components/auth/supabase-auth-provider"
 
 interface AnalyticsData {
   totalTasks: number

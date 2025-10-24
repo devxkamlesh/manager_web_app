@@ -1,10 +1,10 @@
 "use client"
 
 import { useThemeStore, themeColors, type ThemeColor } from "@/lib/theme-store"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/forms/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/layout/card"
+import { Badge } from "@/components/ui/display/badge"
+import { Separator } from "@/components/ui/layout/separator"
 import { Palette, Check, Moon } from "lucide-react"
 
 export function ThemeSettings() {
