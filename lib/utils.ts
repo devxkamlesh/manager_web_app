@@ -12,7 +12,29 @@ export function formatDuration(seconds: number): string {
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
 }
 
+// Get current date in Indian timezone (IST)
+export function getIndianDate(): string {
+  const now = new Date()
+  // Create a new date object in Indian timezone
+  const indianTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Kolkata"}))
+  // Format as YYYY-MM-DD
+  const year = indianTime.getFullYear()
+  const month = String(indianTime.getMonth() + 1).padStart(2, '0')
+  const day = String(indianTime.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+// Get current Indian time as Date object
+export function getIndianDateTime(): Date {
+  const now = new Date()
+  return new Date(now.toLocaleString("en-US", {timeZone: "Asia/Kolkata"}))
+}
+
 export function formatTimeAgo(date: Date | string): string {
+  // Prevent hydration mismatch by returning static text on server
+  if (typeof window === 'undefined') {
+    return 'Recently'
+  }
   const now = new Date()
   const past = new Date(date)
   const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000)

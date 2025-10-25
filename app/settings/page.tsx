@@ -1,8 +1,8 @@
 "use client"
 
 import { ThemeSettings } from "@/components/theme-settings"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/layout/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/layout/tabs"
 import { Settings, User, Bell, Shield, Palette } from "lucide-react"
 
 export default function SettingsPage() {

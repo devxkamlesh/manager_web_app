@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTaskStore, type Task } from '@/lib/task-store'
+import { getIndianDate } from '@/lib/utils'
 
 interface FocusSessionData {
   timeLeft: number
@@ -70,7 +71,7 @@ class SoundManager {
 }
 
 export function useTaskFocus() {
-  const { tasks: allTasks, updateTask } = useTaskStore()
+  const { tasks: allTasks, updateTask, updateSampleTaskDates } = useTaskStore()
   const [currentTask, setCurrentTask] = useState<Task | null>(null)
   const [timeLeft, setTimeLeft] = useState(0)
   const [totalTime, setTotalTime] = useState(0)
@@ -80,12 +81,22 @@ export function useTaskFocus() {
   const [soundEnabled, setSoundEnabled] = useState(() => soundManager.isSoundEnabled())
   const [columnsExist] = useState(true) // Always true for local storage
 
-  // Get today's tasks with estimated hours
-  const tasks = allTasks.filter(task => 
-    task.status !== 'completed' && 
-    task.estimated_hours && 
-    task.estimated_hours > 0
-  )
+  // Get today's tasks for focus sessions - same filtering as tasks page
+  const today = getIndianDate()
+  
+  const tasks = allTasks.filter(task => {
+    // Must not be completed and must have estimated hours for focus work
+    if (task.status === 'completed' || !task.estimated_hours || task.estimated_hours <= 0) {
+      return false
+    }
+    
+    // Date filter - same logic as task manager
+    const taskDate = task.scheduled_date || task.due_date || task.created_at
+    const taskDateOnly = new Date(taskDate).toISOString().split('T')[0]
+    
+    // Only show tasks for today's date
+    return taskDateOnly === today
+  })
 
   // Load progress from localStorage
   const loadProgressFromLocalStorage = useCallback((taskId: string) => {
@@ -166,7 +177,7 @@ export function useTaskFocus() {
       timeLeft,
       totalTime,
       isActive,
-      startedAt: currentTask.focus_session_data?.startedAt || now,
+      startedAt: now,
       pausedAt: isActive ? null : now
     }
 
@@ -189,7 +200,7 @@ export function useTaskFocus() {
       timeLeft,
       totalTime,
       isActive: newIsActive,
-      startedAt: newIsActive ? now : currentTask.focus_session_data?.startedAt || now,
+      startedAt: newIsActive ? now : now,
       pausedAt: newIsActive ? null : now
     }
 
@@ -266,7 +277,7 @@ export function useTaskFocus() {
               timeLeft: newTime,
               totalTime,
               isActive: true,
-              startedAt: currentTask.focus_session_data?.startedAt || new Date().toISOString(),
+              startedAt: new Date().toISOString(),
               pausedAt: null
             }
             saveProgressToLocalStorage(sessionData)
@@ -300,9 +311,12 @@ export function useTaskFocus() {
     soundManager.playSound(soundType)
   }, [soundManager])
 
-  // Check for task from localStorage on mount
+  // Check for task from localStorage on mount and update sample task dates
   useEffect(() => {
     const checkStoredTask = () => {
+      // Update sample task dates to current Indian timezone
+      updateSampleTaskDates();
+      
       const storedTask = localStorage.getItem('focusTask')
       if (storedTask) {
         try {
@@ -317,7 +331,7 @@ export function useTaskFocus() {
     
     // Small delay to ensure the hook is ready
     setTimeout(checkStoredTask, 500)
-  }, [startTaskFocus])
+  }, [startTaskFocus, updateSampleTaskDates])
 
   // Request notification permission
   useEffect(() => {

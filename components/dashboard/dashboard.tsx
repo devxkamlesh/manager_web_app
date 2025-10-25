@@ -80,10 +80,7 @@ export function Dashboard() {
               </h1>
               <Badge variant="secondary" className="hidden sm:inline-flex">
                 <Calendar className="w-3 h-3 mr-1" />
-                {new Date().toLocaleDateString('en-US', { 
-                  month: 'short', 
-                  day: 'numeric' 
-                })}
+                Today
               </Badge>
             </div>
             

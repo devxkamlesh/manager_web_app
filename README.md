@@ -1,129 +1,269 @@
-# DevFlow - Developer Productivity Suite
+# DevFlow - Productivity Suite
 
-A comprehensive productivity suite designed specifically for developers and students. Track your coding sessions, manage projects, build consistent learning habits, and boost your development workflow.
+A comprehensive productivity and project management application built with Next.js, TypeScript, and modern web technologies.
 
 ## 🚀 Features
 
-### Core Productivity Features
-- **Smart Pomodoro Timer** - 25/5 minute focus sessions with break reminders
-- **Task Management** - Organize coding tasks with priorities, tags, and time tracking
-- **Project Organization** - GitHub integration and project progress tracking
-- **Streak System** - Build consistent coding and learning habits
-- **Analytics Dashboard** - Visual insights into your productivity patterns
+### 📊 Analytics Dashboard
+- **12+ Interactive Charts** - Comprehensive data visualization with real-time insights
+- **Performance Metrics** - Track productivity score, completion rates, and efficiency
+- **Skill Development Radar** - Monitor progress across different skill areas
+- **Time Tracking** - Detailed hourly productivity patterns and focus time analysis
+- **Streak Tracking** - Gamified productivity streaks with achievements
+- **Project Distribution** - Visual breakdown of time spent across projects
+- **Mood Tracking** - Monitor daily mood and productivity correlation
 
-### Developer-Focused Tools
-- **GitHub Integration** - Auto-sync repositories, issues, and commit tracking
-- **Learning Path Management** - Track courses, certifications, and skill progression
-- **Time Tracking** - Detailed analytics on coding time and project hours
-- **Calendar Integration** - Smart scheduling for coding sessions and deadlines
+### ✅ Task Management
+- **Smart Task Organization** - Create, edit, and manage tasks with priorities and due dates
+- **Multiple View Modes** - List, board (Kanban), and grid views for different workflows
+- **Date-Based Filtering** - Focus on current day's tasks by default
+- **Advanced Search** - Find tasks by title, description, or tags
+- **Status Tracking** - Todo, In Progress, and Completed states
+- **Focus Timer Integration** - Built-in Pomodoro timer for task completion
+- **Real-time Statistics** - Live task counts and completion rates
 
-## 🛠 Tech Stack
+### 📁 Project Management
+- **Project Overview** - Comprehensive project dashboard with progress tracking
+- **Status Management** - Planning, Active, Completed, Paused, and Cancelled states
+- **Tech Stack Tracking** - Monitor technologies used in each project
+- **Budget Management** - Track project budgets and financial aspects
+- **Team Collaboration** - Manage team members and project roles
+- **Progress Visualization** - Visual progress bars and completion percentages
+- **Category Organization** - Organize projects by categories with custom icons
 
-- **Frontend**: Next.js 14, React 18, TypeScript
-- **Styling**: Tailwind CSS, Radix UI Components
-- **Backend**: Supabase (PostgreSQL)
-- **Authentication**: NextAuth.js (Google & GitHub OAuth)
-- **Caching**: Redis Cloud
-- **Charts**: Recharts
-- **State Management**: Zustand
+### 🔥 Streak System
+- **Daily Streaks** - Automatic tracking of daily productivity streaks
+- **Multiple Streak Types** - Coding, learning, task completion, and custom streaks
+- **Analytics Integration** - Weekly and monthly streak performance analysis
+- **Achievement System** - Unlock badges and achievements for consistency
+- **Visual Progress** - Beautiful streak calendars and progress indicators
 
-## 📦 Installation
+### ⏱️ Focus Sessions
+- **Pomodoro Timer** - Built-in focus timer with customizable intervals
+- **Task Integration** - Link focus sessions directly to specific tasks
+- **Session Analytics** - Track focus time and productivity patterns
+- **Break Management** - Automatic break reminders and scheduling
+- **Deep Work Tracking** - Monitor deep work sessions and effectiveness
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd dev-productivity-suite
-   ```
+### 🎨 Theming System
+- **10 Color Themes** - Blue, Violet, Green, Orange, Red, Pink, Yellow, Indigo, Teal, White
+- **Dynamic Theme Switching** - Real-time theme changes without page reload
+- **Dark Mode Support** - Optimized for both light and dark environments
+- **Consistent Design** - Unified color system across all components
+- **Accessibility** - High contrast ratios and readable color combinations
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+### ⚙️ Settings & Customization
+- **Theme Preferences** - Customize appearance and color schemes
+- **Date Format Settings** - Multiple date format options for international users
+- **Notification Preferences** - Control alerts and reminder settings
+- **Data Export/Import** - Backup and restore your productivity data
+- **Keyboard Shortcuts** - Efficient navigation with custom hotkeys
 
-3. **Set up environment variables**
-   Copy `.env.local` and configure your services:
-   ```bash
-   cp .env.example .env.local
-   ```
+## 🛠️ Technology Stack
 
-4. **Set up Supabase Database**
-   Run the SQL schema in your Supabase project:
-   ```sql
-   -- See database/schema.sql for complete setup
-   ```
+### Frontend
+- **Next.js 14** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first CSS framework
+- **Recharts** - Interactive chart library for analytics
+- **Lucide React** - Beautiful icon library
+- **Radix UI** - Accessible component primitives
 
-5. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+### State Management
+- **Zustand** - Lightweight state management
+- **Local Storage** - Persistent data storage
+- **React Hooks** - Modern React patterns
 
-## 🗄️ Database Schema
+### UI/UX
+- **Responsive Design** - Mobile-first approach
+- **Smooth Animations** - Framer Motion integration
+- **Modern Gradients** - Beautiful visual effects
+- **Accessibility** - WCAG compliant components
 
-The application uses the following main tables:
-- `profiles` - User profiles and settings
-- `projects` - Development projects and repositories
-- `tasks` - Individual tasks and todos
-- `streaks` - Habit tracking and streak counters
-- `pomodoro_sessions` - Focus session history
+## 📱 Pages & Routes
+
+### Main Dashboard
+- `/dashboard` - Overview with key metrics and recent activity
+- `/dashboard/analytics` - Comprehensive analytics with 12+ charts
+- `/dashboard/tasks` - Task management with multiple views
+- `/dashboard/projects` - Project overview and management
+- `/dashboard/streaks` - Streak tracking and analytics
+- `/dashboard/focus` - Focus timer and session management
+- `/dashboard/settings` - Application settings and preferences
+
+### Features
+- **Date-Based Filtering** - All pages support current day filtering
+- **Real-time Updates** - Live data synchronization
+- **Responsive Navigation** - Sidebar with active state indicators
+- **Search Functionality** - Global search across tasks and projects
+- **Export Capabilities** - Data export in multiple formats
+
+## 🎯 Key Highlights
+
+### Performance
+- **Fast Loading** - Optimized bundle size and lazy loading
+- **Smooth Interactions** - 60fps animations and transitions
+- **Efficient Rendering** - React optimization patterns
+- **Local Storage** - Instant data access without API calls
+
+### User Experience
+- **Intuitive Interface** - Clean and modern design
+- **Keyboard Navigation** - Full keyboard accessibility
+- **Mobile Responsive** - Works perfectly on all devices
+- **Progressive Enhancement** - Graceful degradation support
+
+### Data Management
+- **Persistent Storage** - Data survives browser sessions
+- **Real-time Sync** - Instant updates across components
+- **Data Integrity** - Validation and error handling
+- **Backup Support** - Export/import functionality
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn package manager
+- Modern web browser
+
+### Installation
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Start development server: `npm run dev`
+4. Open `http://localhost:3000` in your browser
+
+### Development
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint checks
+
+## 📈 Analytics Features
+
+### Chart Types
+1. **Weekly Activity Overview** - Combined bar/line chart
+2. **30-Day Productivity Trend** - Area chart with trend analysis
+3. **Project Time Distribution** - Interactive pie chart
+4. **Task Priority Analysis** - Horizontal bar chart
+5. **Hourly Productivity Pattern** - Line chart with peak hours
+6. **Skills Development Radar** - Multi-axis radar chart
+7. **Performance Metrics** - Progress bars with trends
+8. **Current Streaks** - Visual streak cards
+9. **Focus Score vs Tasks** - Correlation analysis
+10. **Git Activity** - Development activity tracking
+11. **Mood Tracking** - Daily mood correlation
+12. **Achievement Summary** - Gamification elements
+
+### Data Insights
+- **Productivity Patterns** - Identify peak performance hours
+- **Skill Progress** - Track development across technologies
+- **Goal Achievement** - Monitor monthly and weekly targets
+- **Time Allocation** - Understand where time is spent
+- **Efficiency Metrics** - Measure task completion rates
+
+## 🎨 Design System
+
+### Color Palette
+- **Primary Colors** - Blue, Violet, Green, Orange, Red
+- **Secondary Colors** - Pink, Yellow, Indigo, Teal, White
+- **Neutral Colors** - Gray scale for backgrounds and text
+- **Semantic Colors** - Success, warning, error, and info states
+
+### Typography
+- **Font Family** - System fonts for optimal performance
+- **Font Weights** - Regular, medium, semibold, and bold
+- **Font Sizes** - Responsive scale from 12px to 48px
+- **Line Heights** - Optimized for readability
+
+### Spacing
+- **Grid System** - 8px base unit for consistent spacing
+- **Component Spacing** - Standardized padding and margins
+- **Layout Spacing** - Consistent gaps and gutters
+- **Responsive Spacing** - Adaptive spacing for different screens
 
 ## 🔧 Configuration
 
-### Authentication Setup
-1. **Google OAuth**: Configure in Google Cloud Console
-2. **GitHub OAuth**: Set up GitHub App for repository access
-3. **Supabase**: Create project and configure RLS policies
+### Theme Configuration
+- Default theme set to Blue
+- Customizable color variables
+- Dark mode support
+- Persistent theme preferences
 
-### API Integrations
-- **GitHub API**: For repository and commit data
-- **Google Calendar**: For smart scheduling features
-- **OpenAI API**: For AI-powered productivity insights
+### Date Configuration
+- Multiple date format options
+- Timezone support
+- Localization ready
+- Indian date format support
 
-## 🎯 Usage
+### Storage Configuration
+- Local storage for persistence
+- Data validation and migration
+- Backup and restore capabilities
+- Cross-tab synchronization
 
-### Getting Started
-1. **Sign in** with Google or GitHub
-2. **Create your first project** and link it to a repository
-3. **Add tasks** and start your first Pomodoro session
-4. **Track your progress** and build coding streaks
+## 📊 Data Structure
 
-### Key Workflows
-- **Daily Coding**: Use Pomodoro timer for focused sessions
-- **Project Management**: Organize tasks by project and priority
-- **Learning Tracking**: Set goals and track course progress
-- **Analytics Review**: Monitor productivity patterns weekly
+### Tasks
+- ID, title, description, status, priority
+- Due dates, scheduled dates, creation timestamps
+- Tags, categories, and custom fields
+- Time tracking and focus session integration
 
-## 🚀 Deployment
+### Projects
+- Project metadata and descriptions
+- Status tracking and progress monitoring
+- Team member management
+- Budget and timeline tracking
+- Technology stack documentation
 
-### Vercel (Recommended)
-```bash
-npm run build
-vercel --prod
-```
+### Streaks
+- Daily activity tracking
+- Multiple streak types
+- Historical data and analytics
+- Achievement and milestone tracking
 
-### Environment Variables for Production
-- Set all environment variables in your deployment platform
-- Ensure Supabase RLS policies are properly configured
-- Configure OAuth redirect URLs for production domain
+## 🎯 Future Enhancements
 
-## 🤝 Contributing
+### Planned Features
+- **Cloud Synchronization** - Multi-device data sync
+- **Team Collaboration** - Shared projects and tasks
+- **Advanced Analytics** - Machine learning insights
+- **Mobile App** - Native mobile applications
+- **API Integration** - Third-party service connections
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### Performance Improvements
+- **Caching Strategy** - Improved data caching
+- **Bundle Optimization** - Smaller bundle sizes
+- **Lazy Loading** - Component-level code splitting
+- **Service Workers** - Offline functionality
 
-## 📝 License
+## 📝 Contributing
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+### Development Guidelines
+- Follow TypeScript best practices
+- Use consistent naming conventions
+- Write comprehensive tests
+- Document new features
+- Follow accessibility guidelines
+
+### Code Style
+- ESLint configuration for consistency
+- Prettier for code formatting
+- Conventional commits for git history
+- Component-based architecture
+- Custom hooks for reusable logic
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
-- Built with [Next.js](https://nextjs.org/)
-- UI components from [Radix UI](https://www.radix-ui.com/)
-- Icons from [Lucide React](https://lucide.dev/)
-- Database powered by [Supabase](https://supabase.com/)
+- **Next.js Team** - Amazing React framework
+- **Tailwind CSS** - Utility-first CSS framework
+- **Recharts** - Beautiful chart library
+- **Radix UI** - Accessible component primitives
+- **Lucide** - Beautiful icon library
 
 ---
 
-**DevFlow** - Boost your development productivity! 🚀
+**DevFlow** - Boost your productivity, track your progress, achieve your goals! 🚀

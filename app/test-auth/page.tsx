@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/forms/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/layout/card"
 import { supabase } from "@/lib/supabase"
 import { useToast } from "@/hooks/use-toast"
 

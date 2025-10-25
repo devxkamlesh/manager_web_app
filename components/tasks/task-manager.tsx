@@ -22,14 +22,14 @@ export interface TaskManagerRef {
   setFilter: (filter: 'all' | 'todo' | 'in_progress' | 'completed') => void
   setViewMode: (mode: 'list' | 'board' | 'grid') => void
   setSearchQuery: (query: string) => void
-  setSelectedDate: (date: string) => void
 }
 
 interface TaskManagerProps {
   selectedDate?: string
+  onCreateTask?: () => void
 }
 
-export const TaskManager = forwardRef<TaskManagerRef, TaskManagerProps>(({ selectedDate }, ref) => {
+export const TaskManager = forwardRef<TaskManagerRef, TaskManagerProps>(({ selectedDate, onCreateTask }, ref) => {
   const { toast } = useToast()
   const { tasks, updateTask, deleteTask } = useTaskStore()
   const [loading, setLoading] = useState(false) // No loading needed for local storage
@@ -40,12 +40,8 @@ export const TaskManager = forwardRef<TaskManagerRef, TaskManagerProps>(({ selec
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [internalSelectedDate, setInternalSelectedDate] = useState('')
   const [focusTask, setFocusTask] = useState<Task | null>(null)
   const [showFocusTimer, setShowFocusTimer] = useState(false)
-  
-  // Use external selectedDate if provided, otherwise use internal state
-  const currentSelectedDate = selectedDate || internalSelectedDate
 
   // Expose methods to parent component
   useImperativeHandle(ref, () => ({
@@ -58,9 +54,6 @@ export const TaskManager = forwardRef<TaskManagerRef, TaskManagerProps>(({ selec
     },
     setSearchQuery: (query: string) => {
       setSearchQuery(query)
-    },
-    setSelectedDate: (date: string) => {
-      setInternalSelectedDate(date)
     }
   }))
 
@@ -177,12 +170,11 @@ export const TaskManager = forwardRef<TaskManagerRef, TaskManagerProps>(({ selec
     // Status filter
     if (filter !== 'all' && task.status !== filter) return false
 
-    // Date filter - check scheduled_date first, then fall back to created_at
-    if (currentSelectedDate) {
-      const dateToCheck = task.scheduled_date || task.created_at
-      const taskDate = new Date(dateToCheck).toDateString()
-      const selectedDateObj = new Date(currentSelectedDate).toDateString()
-      if (taskDate !== selectedDateObj) return false
+    // Date filter
+    if (selectedDate) {
+      const taskDate = task.scheduled_date || task.due_date || task.created_at
+      const taskDateOnly = new Date(taskDate).toISOString().split('T')[0]
+      if (taskDateOnly !== selectedDate) return false
     }
 
     // Search filter
@@ -198,11 +190,24 @@ export const TaskManager = forwardRef<TaskManagerRef, TaskManagerProps>(({ selec
     return true
   })
 
+  // Filter tasks by selected date for counts
+  const getTasksForDate = (tasks: Task[]) => {
+    if (!selectedDate) return tasks
+    
+    return tasks.filter(task => {
+      const taskDate = task.scheduled_date || task.due_date || task.created_at
+      const taskDateOnly = new Date(taskDate).toISOString().split('T')[0]
+      return taskDateOnly === selectedDate
+    })
+  }
+
+  const tasksForSelectedDate = getTasksForDate(tasks)
+
   const taskCounts = {
-    all: tasks.length,
-    todo: tasks.filter(t => t.status === 'todo').length,
-    in_progress: tasks.filter(t => t.status === 'in_progress').length,
-    completed: tasks.filter(t => t.status === 'completed').length,
+    all: tasksForSelectedDate.length,
+    todo: tasksForSelectedDate.filter(t => t.status === 'todo').length,
+    in_progress: tasksForSelectedDate.filter(t => t.status === 'in_progress').length,
+    completed: tasksForSelectedDate.filter(t => t.status === 'completed').length,
   }
 
   if (loading) {
@@ -328,7 +333,7 @@ export const TaskManager = forwardRef<TaskManagerRef, TaskManagerProps>(({ selec
             }
             action={filter === 'all' ? {
               label: "Create Your First Task",
-              onClick: () => { } // This will be handled by the parent component
+              onClick: onCreateTask || (() => {})
             } : undefined}
           />
         )}

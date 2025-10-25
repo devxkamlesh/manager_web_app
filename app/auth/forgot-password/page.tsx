@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/forms/button"
+import { Input } from "@/components/ui/forms/input"
+import { Label } from "@/components/ui/forms/label"
 import { useToast } from "@/hooks/use-toast"
 import { Mail, ArrowLeft, KeyRound } from "lucide-react"
 import Link from "next/link"

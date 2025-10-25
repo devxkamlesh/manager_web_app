@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/forms/button"
 import { Badge } from "@/components/ui/display/badge"
 import { Progress } from "@/components/ui/feedback/progress"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/navigation/dropdown-menu"
-import { Plus, Github, ExternalLink, Calendar, Target, CheckSquare, Pause, Globe, Users, Code, DollarSign, Flag, MoreHorizontal, Eye, Trash2 } from "lucide-react"
+import { Plus, Github, Calendar, Target, CheckSquare, Pause, Globe, Users, Code, DollarSign, MoreHorizontal, Eye, Edit, Trash2, Rocket, Sparkles } from "lucide-react"
 import { EmptyState } from "@/components/ui/display/empty-state"
 import { CreateProjectDialog } from "@/components/projects/create-project-dialog"
-
 import { ProjectViewDialog } from "@/components/projects/project-view-dialog"
-import { formatTimeAgo } from "@/lib/utils"
+import { EditProjectDialog } from "@/components/projects/edit-project-dialog"
+import { formatTimeAgo, cn } from "@/lib/utils"
 import { useProjectStore, type Project } from "@/lib/project-store"
 import { useCategoryStore } from "@/lib/category-store"
 import { getIconByName } from "@/lib/icon-library"
@@ -31,7 +31,6 @@ export interface ProjectManagerRef {
   setFilter: (filter: string) => void
   setViewMode: (mode: 'list' | 'grid' | 'board') => void
   setSearchQuery: (query: string) => void
-  setSelectedDate: (date: string) => void
 }
 
 export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProps>(({ 
@@ -44,7 +43,6 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
 }, ref) => {
   const { projects, deleteProject } = useProjectStore()
   const { getCategoryById } = useCategoryStore()
-  const { color: themeColor } = useThemeStore()
   const { toast } = useToast()
   const [internalShowDialog, setInternalShowDialog] = useState(false)
   const [internalSearchQuery, setInternalSearchQuery] = useState('')
@@ -55,6 +53,8 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
   // Dialog states
   const [viewProject, setViewProject] = useState<Project | null>(null)
   const [showViewDialog, setShowViewDialog] = useState(false)
+  const [editProject, setEditProject] = useState<Project | null>(null)
+  const [showEditDialog, setShowEditDialog] = useState(false)
   
   // Use external state if provided, otherwise use internal state
   const dialogOpen = setShowCreateDialog ? showCreateDialog : internalShowDialog
@@ -62,7 +62,6 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
   const currentSearchQuery = searchQuery || internalSearchQuery
   const currentSelectedDate = selectedDate || internalSelectedDate
   const currentStatusFilter = statusFilter || internalStatusFilter
-  const currentViewMode = viewMode || internalViewMode
 
   // Expose methods to parent component
   useImperativeHandle(ref, () => ({
@@ -74,9 +73,6 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
     },
     setSearchQuery: (query: string) => {
       setInternalSearchQuery(query)
-    },
-    setSelectedDate: (date: string) => {
-      setInternalSelectedDate(date)
     }
   }))
 
@@ -90,6 +86,7 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
     }
     
     // Filter by date if selectedDate is provided
+    // Filter by date if selectedDate is provided
     if (currentSelectedDate) {
       const targetDate = new Date(currentSelectedDate).toDateString()
       filtered = filtered.filter(project => {
@@ -97,7 +94,7 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
         return projectDate === targetDate
       })
     }
-    
+
     // Filter by search query
     if (currentSearchQuery.trim()) {
       const query = currentSearchQuery.toLowerCase()
@@ -112,40 +109,59 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
     return filtered
   }, [projects, currentSearchQuery, currentSelectedDate, currentStatusFilter])
 
-  const getStatusVariant = (status: Project['status']) => {
-    switch (status) {
-      case 'planning': return 'outline'
-      case 'active': return 'default'
-      case 'completed': return 'secondary'
-      case 'paused': return 'outline'
-      case 'cancelled': return 'destructive'
-      default: return 'secondary'
-    }
-  }
 
-  const getStatusColor = (status: Project['status']) => {
+
+  const getStatusStyles = (status: Project['status']) => {
     switch (status) {
-      case 'planning': return 'text-blue-600'
-      case 'active': return 'text-green-600'
-      case 'completed': return 'text-gray-600'
-      case 'paused': return 'text-yellow-600'
-      case 'cancelled': return 'text-red-600'
-      default: return 'text-gray-600'
+      case 'planning': 
+        return "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
+      case 'active': 
+        return "bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300 dark:border-green-800"
+      case 'completed': 
+        return "bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950/30 dark:text-gray-300 dark:border-gray-800"
+      case 'paused': 
+        return "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950/30 dark:text-yellow-300 dark:border-yellow-800"
+      case 'cancelled': 
+        return "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:text-red-300 dark:border-red-800"
+      default: 
+        return "bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950/30 dark:text-gray-300 dark:border-gray-800"
     }
   }
 
   const getPriorityColor = (priority: Project['priority']) => {
     switch (priority) {
-      case 'low': return 'bg-green-500'
-      case 'medium': return 'bg-yellow-500'
-      case 'high': return 'bg-red-500'
-      default: return 'bg-gray-500'
+      case 'low': return 'bg-green-500 shadow-green-500/20'
+      case 'medium': return 'bg-yellow-500 shadow-yellow-500/20'
+      case 'high': return 'bg-red-500 shadow-red-500/20'
+      default: return 'bg-gray-500 shadow-gray-500/20'
+    }
+  }
+
+  const getProjectCardGradient = (status: Project['status']) => {
+    switch (status) {
+      case 'planning':
+        return "bg-gradient-to-br from-blue-50/30 via-card to-card/95 dark:from-blue-950/10"
+      case 'active':
+        return "bg-gradient-to-br from-green-50/30 via-card to-card/95 dark:from-green-950/10"
+      case 'completed':
+        return "bg-gradient-to-br from-gray-50/30 via-card to-card/95 dark:from-gray-950/10"
+      case 'paused':
+        return "bg-gradient-to-br from-yellow-50/30 via-card to-card/95 dark:from-yellow-950/10"
+      case 'cancelled':
+        return "bg-gradient-to-br from-red-50/30 via-card to-card/95 dark:from-red-950/10"
+      default:
+        return "bg-gradient-to-br from-primary/5 via-card to-card/95"
     }
   }
 
   const handleViewProject = (project: Project) => {
     setViewProject(project)
     setShowViewDialog(true)
+  }
+
+  const handleEditProject = (project: Project) => {
+    setEditProject(project)
+    setShowEditDialog(true)
   }
 
   const handleDeleteProject = async (project: Project) => {
@@ -169,82 +185,35 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
   return (
     <div className="space-y-8">
       {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-5">
-        <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <div className="p-2 bg-primary rounded-lg">
-                <Target className="h-4 w-4 text-primary-foreground" />
-              </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">Total</p>
-                <p className="text-xl font-bold text-foreground">{projects.length}</p>
-              </div>
-            </div>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-blue-600">{filteredProjects.length}</div>
+            <div className="text-sm text-muted-foreground">Total Projects</div>
           </CardContent>
         </Card>
-
-        <Card className="bg-gradient-to-br from-blue-500/5 to-blue-500/10 border-blue-500/20">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <div className="p-2 bg-blue-500 rounded-lg">
-                <Calendar className="h-4 w-4 text-white" />
-              </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">Planning</p>
-                <p className="text-xl font-bold text-foreground">
-                  {projects.filter(p => p.status === 'planning').length}
-                </p>
-              </div>
-            </div>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-yellow-600">{filteredProjects.filter(p => p.status === 'planning').length}</div>
+            <div className="text-sm text-muted-foreground">Planning</div>
           </CardContent>
         </Card>
-
-        <Card className="bg-gradient-to-br from-green-500/5 to-green-500/10 border-green-500/20">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <div className="p-2 bg-green-500 rounded-lg">
-                <CheckSquare className="h-4 w-4 text-white" />
-              </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">Active</p>
-                <p className="text-xl font-bold text-foreground">
-                  {projects.filter(p => p.status === 'active').length}
-                </p>
-              </div>
-            </div>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-green-600">{filteredProjects.filter(p => p.status === 'active').length}</div>
+            <div className="text-sm text-muted-foreground">Active</div>
           </CardContent>
         </Card>
-
-        <Card className="bg-gradient-to-br from-purple-500/5 to-purple-500/10 border-purple-500/20">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <div className="p-2 bg-purple-500 rounded-lg">
-                <CheckSquare className="h-4 w-4 text-white" />
-              </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">Completed</p>
-                <p className="text-xl font-bold text-foreground">
-                  {projects.filter(p => p.status === 'completed').length}
-                </p>
-              </div>
-            </div>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-purple-600">{filteredProjects.filter(p => p.status === 'completed').length}</div>
+            <div className="text-sm text-muted-foreground">Completed</div>
           </CardContent>
         </Card>
-
-        <Card className="bg-gradient-to-br from-yellow-500/5 to-yellow-500/10 border-yellow-500/20">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <div className="p-2 bg-yellow-500 rounded-lg">
-                <Pause className="h-4 w-4 text-white" />
-              </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">Paused</p>
-                <p className="text-xl font-bold text-foreground">
-                  {projects.filter(p => p.status === 'paused').length}
-                </p>
-              </div>
-            </div>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-orange-600">{filteredProjects.filter(p => p.status === 'paused').length}</div>
+            <div className="text-sm text-muted-foreground">Paused</div>
           </CardContent>
         </Card>
       </div>
@@ -263,13 +232,28 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
           {filteredProjects.map((project) => {
             const category = getCategoryById(project.category || '')
             return (
-              <Card key={project.id} className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 bg-gradient-to-br from-background to-muted/20">
-                <CardHeader className="pb-3">
+              <Card key={project.id} className={cn(
+                "group hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border-0 relative overflow-hidden",
+                "bg-gradient-to-br from-card/80 via-card to-card/90 backdrop-blur-sm",
+                "hover:scale-[1.02] hover:-translate-y-2",
+                getProjectCardGradient(project.status)
+              )}>
+                {/* Status indicator bar */}
+                <div className={cn(
+                  "absolute top-0 left-0 right-0 h-1",
+                  project.status === 'active' && "bg-gradient-to-r from-green-400 to-green-600",
+                  project.status === 'planning' && "bg-gradient-to-r from-blue-400 to-blue-600",
+                  project.status === 'completed' && "bg-gradient-to-r from-gray-400 to-gray-600",
+                  project.status === 'paused' && "bg-gradient-to-r from-yellow-400 to-yellow-600",
+                  project.status === 'cancelled' && "bg-gradient-to-r from-red-400 to-red-600"
+                )} />
+                
+                <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-3 mb-3">
                         {category && (
-                          <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                          <Badge variant="secondary" className="bg-primary/15 text-primary border-primary/30 font-semibold px-3 py-1 rounded-full shadow-sm">
                             {(() => {
                               const IconComponent = getIconByName(category.icon)
                               return <IconComponent className="w-3 h-3 mr-1" />
@@ -277,10 +261,16 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
                             {category.name}
                           </Badge>
                         )}
-                        <div className={`w-2 h-2 rounded-full ${getPriorityColor(project.priority)}`} title={`${project.priority} priority`} />
+                        <div 
+                          className={cn(
+                            "w-4 h-4 rounded-full shadow-lg ring-2 ring-white/20",
+                            getPriorityColor(project.priority)
+                          )} 
+                          title={`${project.priority} priority`} 
+                        />
                       </div>
                       <CardTitle 
-                        className="text-lg group-hover:text-primary transition-colors cursor-pointer"
+                        className="text-xl group-hover:text-primary transition-all duration-300 cursor-pointer font-bold hover:scale-[1.02] origin-left"
                         onClick={() => handleViewProject(project)}
                       >
                         {project.name}
@@ -288,21 +278,25 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge 
-                        variant={getStatusVariant(project.status)}
-                        className={`shadow-sm ${getStatusColor(project.status)}`}
+                        variant="outline"
+                        className={cn("shadow-sm font-semibold px-3 py-1 rounded-full", getStatusStyles(project.status))}
                       >
                         {project.status}
                       </Badge>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <Button variant="ghost" size="sm" className="h-9 w-9 p-0 hover:bg-primary/10 hover:scale-110 transition-all duration-200 rounded-full opacity-0 group-hover:opacity-100">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align="end" className="w-48">
                           <DropdownMenuItem onClick={() => handleViewProject(project)}>
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleEditProject(project)}>
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit Project
                           </DropdownMenuItem>
                           <DropdownMenuItem 
                             onClick={() => handleDeleteProject(project)}
@@ -316,33 +310,37 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-5 px-6 pb-6">
                   {project.description && (
-                    <p className="text-sm text-muted-foreground line-clamp-2">
+                    <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed opacity-80">
                       {project.description}
                     </p>
                   )}
 
                   {/* Progress Bar */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Progress</span>
-                      <span className="font-medium">{project.progress}%</span>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground font-semibold">Progress</span>
+                      <span className="font-bold text-primary text-lg">{project.progress}%</span>
                     </div>
-                    <Progress value={project.progress} className="h-2" />
+                    <div className="relative">
+                      <Progress value={project.progress} className="h-4 bg-muted/40 rounded-full overflow-hidden" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full" />
+                    </div>
                   </div>
 
                   {/* Tech Stack */}
                   {project.tech_stack && project.tech_stack.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-2">
                       {project.tech_stack.slice(0, 3).map((tech) => (
-                        <Badge key={tech} variant="outline" className="text-xs">
+                        <Badge key={tech} variant="outline" className="text-xs bg-primary/10 border-primary/30 text-primary font-semibold px-3 py-1 rounded-full shadow-sm">
+                          <Code className="w-2 h-2 mr-1" />
                           {tech}
                         </Badge>
                       ))}
                       {project.tech_stack.length > 3 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{project.tech_stack.length - 3}
+                        <Badge variant="outline" className="text-xs bg-muted/60 font-semibold px-3 py-1 rounded-full shadow-sm">
+                          +{project.tech_stack.length - 3} more
                         </Badge>
                       )}
                     </div>
@@ -350,35 +348,35 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
 
                   {/* Project Info */}
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1 bg-muted/30 px-2 py-1 rounded-full font-medium">
                         <Calendar className="w-3 h-3" />
                         {formatTimeAgo(new Date(project.updated_at))}
                       </div>
                       {project.budget && (
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1 bg-muted/30 px-2 py-1 rounded-full font-medium">
                           <DollarSign className="w-3 h-3" />
                           {project.budget.toLocaleString()}
                         </div>
                       )}
                       {project.team_members && project.team_members.length > 0 && (
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1 bg-muted/30 px-2 py-1 rounded-full font-medium">
                           <Users className="w-3 h-3" />
                           {project.team_members.length}
                         </div>
                       )}
                     </div>
                     
-                    <div className="flex gap-1">
+                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
                       {project.github_url && (
                         <a
                           href={project.github_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 hover:text-primary transition-colors p-1 rounded hover:bg-muted"
+                          className="flex items-center gap-1 hover:text-primary transition-all duration-200 p-2 rounded-full hover:bg-primary/10 hover:scale-110"
                           title="GitHub Repository"
                         >
-                          <Github className="w-3 h-3" />
+                          <Github className="w-4 h-4" />
                         </a>
                       )}
                       {project.website_url && (
@@ -386,10 +384,10 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
                           href={project.website_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 hover:text-primary transition-colors p-1 rounded hover:bg-muted"
+                          className="flex items-center gap-1 hover:text-primary transition-all duration-200 p-2 rounded-full hover:bg-primary/10 hover:scale-110"
                           title="Website"
                         >
-                          <Globe className="w-3 h-3" />
+                          <Globe className="w-4 h-4" />
                         </a>
                       )}
                     </div>
@@ -402,14 +400,14 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
           {filteredProjects.length === 0 && projects.length === 0 && (
             <div className="col-span-full">
               <EmptyState
-                icon="🚀"
+                icon={<Rocket className="w-16 h-16 text-primary/40" />}
                 title="Ready to start your first project?"
                 description="Projects help you organize your work, track progress, and stay focused on what matters most."
                 action={{
                   label: "Create Your First Project",
                   onClick: () => setDialogOpen(true)
                 }}
-                className="bg-gradient-to-br from-muted/50 to-muted/20"
+                className="bg-gradient-to-br from-primary/5 via-muted/20 to-muted/10 border-primary/20"
               />
             </div>
           )}
@@ -417,10 +415,10 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
           {filteredProjects.length === 0 && projects.length > 0 && (
             <div className="col-span-full">
               <EmptyState
-                icon="🔍"
+                icon={<Sparkles className="w-16 h-16 text-primary/40" />}
                 title="No projects found"
-                description={`No projects match "${searchQuery}". Try adjusting your search terms.`}
-                className="bg-gradient-to-br from-muted/50 to-muted/20"
+                description={`No projects match "${currentSearchQuery}". Try adjusting your search terms.`}
+                className="bg-gradient-to-br from-primary/5 via-muted/20 to-muted/10 border-primary/20"
               />
             </div>
           )}
@@ -442,11 +440,20 @@ export const ProjectOverview = forwardRef<ProjectManagerRef, ProjectOverviewProp
         open={showViewDialog}
         onOpenChange={setShowViewDialog}
         onEdit={() => {
-          // Edit functionality will be added later
-          toast({
-            title: "Coming Soon",
-            description: "Edit functionality will be available soon!"
-          })
+          if (viewProject) {
+            setShowViewDialog(false)
+            handleEditProject(viewProject)
+          }
+        }}
+      />
+
+      {/* Edit Project Dialog */}
+      <EditProjectDialog
+        project={editProject}
+        open={showEditDialog}
+        onOpenChange={setShowEditDialog}
+        onProjectUpdated={() => {
+          setEditProject(null)
         }}
       />
     </div>

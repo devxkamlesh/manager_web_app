@@ -8,12 +8,12 @@ import { Progress } from "@/components/ui/feedback/progress"
 import { Input } from "@/components/ui/forms/input"
 import { Label } from "@/components/ui/forms/label"
 import { Sidebar } from "@/components/layout/sidebar"
-import { 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  Coffee, 
-  Timer, 
+import {
+  Play,
+  Pause,
+  RotateCcw,
+  Coffee,
+  Timer,
   Settings,
   Clock,
   Target,
@@ -27,25 +27,32 @@ import {
   TrendingUp,
   Focus,
   Brain,
-  Grid3X3
+  Grid3X3,
+  Calendar
 } from "lucide-react"
 import { formatDuration } from "@/lib/utils"
 import { usePomodoro } from "@/hooks/use-pomodoro"
 import { useTaskFocus } from "@/hooks/use-task-focus"
-import { useThemeStore } from "@/lib/theme-store"
+
 import { cn } from "@/lib/utils"
 
 export function FocusSession() {
-  const { color } = useThemeStore()
-  
+  const [isClient, setIsClient] = useState(false)
+
+
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   // Pomodoro timer for general sessions
-  const { 
-    timeLeft: pomodoroTimeLeft, 
-    isActive: pomodoroIsActive, 
-    isBreak, 
-    sessions, 
-    toggleTimer: togglePomodoroTimer, 
-    resetTimer: resetPomodoroTimer, 
+  const {
+    timeLeft: pomodoroTimeLeft,
+    isActive: pomodoroIsActive,
+    isBreak,
+    sessions,
+    toggleTimer: togglePomodoroTimer,
+    resetTimer: resetPomodoroTimer,
     setCustomTime,
     focusTime,
     shortBreakTime,
@@ -76,16 +83,11 @@ export function FocusSession() {
   const [customBreakTime, setCustomBreakTime] = useState(shortBreakTime)
   const [customLongBreakTime, setCustomLongBreakTime] = useState(longBreakTime)
   const [focusMode, setFocusMode] = useState<'pomodoro' | 'task'>('task')
-  const [animationsEnabled, setAnimationsEnabled] = useState(true)
-  const [isClient, setIsClient] = useState(false)
+
 
   // Handle client-side initialization
   useEffect(() => {
     setIsClient(true)
-    const savedAnimations = localStorage.getItem('focus-animations-enabled')
-    if (savedAnimations !== null) {
-      setAnimationsEnabled(savedAnimations !== 'false')
-    }
   }, [])
 
   // Use appropriate values based on focus mode
@@ -99,7 +101,7 @@ export function FocusSession() {
 
   const progress = focusMode === 'task' && currentTask
     ? ((taskTotalTime - timeLeft) / taskTotalTime) * 100
-    : isBreak 
+    : isBreak
       ? ((sessions % 4 === 0 ? customLongBreakTime * 60 : customBreakTime * 60) - timeLeft) / (sessions % 4 === 0 ? customLongBreakTime * 60 : customBreakTime * 60) * 100
       : (customFocusTime * 60 - timeLeft) / (customFocusTime * 60) * 100
 
@@ -126,66 +128,20 @@ export function FocusSession() {
     setShowSettings(false)
   }
 
-  const toggleAnimations = () => {
-    const newValue = !animationsEnabled
-    setAnimationsEnabled(newValue)
-    localStorage.setItem('focus-animations-enabled', newValue.toString())
-  }
+
 
   // Fullscreen Mode with Animated Grid Background
   if (isFullscreen) {
     return (
       <div className="min-h-screen bg-background relative overflow-hidden">
-        {/* Graph Grid Background */}
-        <div className="absolute inset-0 opacity-[0.03]">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="fullscreenGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path 
-                  d="M 40 0 L 0 0 0 40" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="1"
-                  className="text-foreground"
-                />
-              </pattern>
-            </defs>
-            <rect 
-              width="100%" 
-              height="100%" 
-              fill="url(#fullscreenGrid)"
-            />
-            {isClient && animationsEnabled && (
-              <>
-                {Array.from({ length: 30 }).map((_, i) => (
-                  <circle
-                    key={i}
-                    cx={`${(i * 127) % 100}%`}
-                    cy={`${(i * 193) % 100}%`}
-                    r="1.5"
-                    fill="currentColor"
-                    className="text-primary/50"
-                  >
-                    <animate
-                      attributeName="opacity"
-                      values="0;1;0"
-                      dur="3s"
-                      repeatCount="indefinite"
-                      begin={`${i * 0.1}s`}
-                    />
-                  </circle>
-                ))}
-              </>
-            )}
-          </svg>
-        </div>
-        
+
+
         {/* Subtle Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-        
+
         {/* Main Content Grid */}
         <div className="relative z-10 min-h-screen grid grid-rows-[auto_1fr_auto] p-8">
-          
+
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center gap-4">
@@ -201,11 +157,11 @@ export function FocusSession() {
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={toggleSound}
                 className={soundEnabled ? "text-primary" : "text-muted-foreground"}
               >
@@ -223,7 +179,7 @@ export function FocusSession() {
           {/* Center Content */}
           <div className="flex items-center justify-center">
             <div className="text-center space-y-12 max-w-2xl">
-              
+
               {/* Large Timer Display */}
               <div className="relative">
                 <div className="w-80 h-80 mx-auto relative">
@@ -250,18 +206,18 @@ export function FocusSession() {
                       className="text-primary transition-all duration-1000"
                     />
                   </svg>
-                  
+
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <div className="text-7xl font-bold mb-4 text-foreground">
+                    <div className="text-5xl font-bold mb-3 text-foreground">
                       {formatDuration(timeLeft)}
                     </div>
-                    <div className="text-xl text-muted-foreground uppercase tracking-wider mb-2">
-                      {focusMode === 'task' 
+                    <div className="text-sm text-muted-foreground uppercase tracking-wider mb-1">
+                      {focusMode === 'task'
                         ? (currentTask ? 'Deep Focus' : 'Select Task')
                         : isBreak ? 'Break Time' : 'Focus Time'
                       }
                     </div>
-                    <div className="text-lg text-muted-foreground">
+                    <div className="text-xs text-muted-foreground">
                       {Math.round(progress)}% Complete
                     </div>
                   </div>
@@ -301,7 +257,7 @@ export function FocusSession() {
               {isActive ? <Pause className="w-6 h-6 mr-3" /> : <Play className="w-6 h-6 mr-3" />}
               {isActive ? 'Pause' : 'Start'}
             </Button>
-            
+
             <Button
               onClick={resetTimer}
               variant="outline"
@@ -379,7 +335,7 @@ export function FocusSession() {
                     <h4 className="font-medium">Task Focus Mode</h4>
                     <div className="p-4 bg-muted/50 rounded-lg">
                       <p className="text-sm text-muted-foreground">
-                        In Task Focus mode, timer duration is determined by the estimated hours of your selected task. 
+                        In Task Focus mode, timer duration is determined by the estimated hours of your selected task.
                         Select a task from the list below to start a focused work session.
                       </p>
                       {currentTask && (
@@ -394,26 +350,7 @@ export function FocusSession() {
                   </div>
                 )}
 
-                {/* Visual Settings */}
-                <div className="space-y-4">
-                  <h4 className="font-medium">Visual Settings</h4>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Grid3X3 className="w-5 h-5 text-primary" />
-                      <div>
-                        <Label>Animated Grid Background</Label>
-                        <p className="text-xs text-muted-foreground">Enable animated grid effects</p>
-                      </div>
-                    </div>
-                    <Button
-                      variant={animationsEnabled ? "default" : "outline"}
-                      size="sm"
-                      onClick={toggleAnimations}
-                    >
-                      {animationsEnabled ? 'Enabled' : 'Disabled'}
-                    </Button>
-                  </div>
-                </div>
+
 
                 {/* Sound Settings */}
                 <div className="space-y-4">
@@ -438,7 +375,7 @@ export function FocusSession() {
                       {soundEnabled ? 'Enabled' : 'Disabled'}
                     </Button>
                   </div>
-                  
+
                   {soundEnabled && (
                     <div className="flex gap-2">
                       <Button
@@ -474,51 +411,21 @@ export function FocusSession() {
       {/* Static Grid Background for Main Interface */}
       {isClient && (
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="mainGrid" width="60" height="60" patternUnits="userSpaceOnUse">
-                <path 
-                  d="M 60 0 L 0 0 0 60" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="1"
-                  className="text-foreground"
-                />
-              </pattern>
-            </defs>
-            <rect 
-              width="100%" 
-              height="100%" 
-              fill="url(#mainGrid)"
-            />
-            {animationsEnabled && (
-              <>
-                {Array.from({ length: 20 }).map((_, i) => (
-                  <circle
-                    key={i}
-                    cx={`${(i * 137) % 100}%`}
-                    cy={`${(i * 211) % 100}%`}
-                    r="1"
-                    fill="currentColor"
-                    className="text-primary/30"
-                  >
-                    <animate
-                      attributeName="opacity"
-                      values="0;0.8;0"
-                      dur="4s"
-                      repeatCount="indefinite"
-                      begin={`${i * 0.2}s`}
-                    />
-                  </circle>
-                ))}
-              </>
-            )}
-          </svg>
+          <div 
+            className="w-full h-full"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, currentColor 1px, transparent 1px),
+                linear-gradient(to bottom, currentColor 1px, transparent 1px)
+              `,
+              backgroundSize: '60px 60px'
+            }}
+          />
         </div>
       )}
-      
+
       <Sidebar activeView="focus" />
-      
+
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Professional Header */}
         <header className="h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -532,11 +439,11 @@ export function FocusSession() {
                 <p className="text-xs text-muted-foreground">Deep work & productivity</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={toggleSound}
                 className={soundEnabled ? "text-primary" : "text-muted-foreground"}
               >
@@ -554,7 +461,7 @@ export function FocusSession() {
 
         <main className="flex-1 overflow-y-auto p-6">
           <div className="max-w-7xl mx-auto space-y-6">
-            
+
             {/* Focus Mode Toggle */}
             <Card className="bg-primary/5 border-primary/20">
               <CardContent className="p-6">
@@ -591,10 +498,10 @@ export function FocusSession() {
             </Card>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              
+
               {/* Main Timer Section */}
               <div className="lg:col-span-2 space-y-6">
-                
+
                 {/* Timer Card */}
                 <Card>
                   <CardHeader>
@@ -608,14 +515,14 @@ export function FocusSession() {
                           <Timer className="w-6 h-6 text-primary" />
                         )}
                         <span>
-                          {focusMode === 'task' 
+                          {focusMode === 'task'
                             ? (currentTask ? currentTask.title : 'Select a Task')
                             : isBreak ? 'Break Time' : 'Focus Session'
                           }
                         </span>
                       </div>
                       <Badge variant="secondary">
-                        {focusMode === 'task' 
+                        {focusMode === 'task'
                           ? (currentTask?.estimated_hours ? `${currentTask.estimated_hours}h` : 'No time')
                           : `${customFocusTime}m`
                         }
@@ -623,7 +530,7 @@ export function FocusSession() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    
+
                     {/* Circular Timer Display */}
                     <div className="flex justify-center">
                       <div className="relative w-72 h-72">
@@ -650,13 +557,13 @@ export function FocusSession() {
                             className="text-primary transition-all duration-1000"
                           />
                         </svg>
-                        
+
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
                           <div className="text-4xl font-bold mb-2">
                             {formatDuration(timeLeft)}
                           </div>
                           <div className="text-sm text-muted-foreground uppercase tracking-wider mb-1">
-                            {focusMode === 'task' 
+                            {focusMode === 'task'
                               ? (currentTask ? 'Deep Focus' : 'Select Task')
                               : isBreak ? 'Break Time' : 'Focus Time'
                             }
@@ -667,7 +574,7 @@ export function FocusSession() {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Control Buttons */}
                     <div className="flex justify-center gap-4">
                       <Button
@@ -681,12 +588,12 @@ export function FocusSession() {
                         ) : (
                           <Play className="w-5 h-5 mr-2" />
                         )}
-                        {focusMode === 'task' && !currentTask 
-                          ? 'Select a Task First' 
+                        {focusMode === 'task' && !currentTask
+                          ? 'Select a Task First'
                           : isActive ? 'Pause' : 'Start'
                         }
                       </Button>
-                      
+
                       <Button
                         onClick={resetTimer}
                         variant="outline"
@@ -714,9 +621,26 @@ export function FocusSession() {
                 {focusMode === 'task' && (
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <CheckCircle2 className="w-6 h-6 text-green-600" />
-                        Available Tasks
+                      <CardTitle className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-6 h-6 text-green-600" />
+                          Available Tasks
+                        </div>
+                        <div className="flex items-center gap-2 px-3 py-1 bg-muted/50 rounded-lg">
+                          <Calendar className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-sm font-medium" key={isClient ? 'client' : 'server'}>
+                            {isClient ? (() => {
+                              const now = new Date();
+                              const indianDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+                              return indianDate.toLocaleDateString('en-IN', { 
+                                weekday: 'short', 
+                                day: 'numeric', 
+                                month: 'short',
+                                timeZone: 'Asia/Kolkata'
+                              });
+                            })() : 'Today'}
+                          </span>
+                        </div>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -727,8 +651,8 @@ export function FocusSession() {
                               key={task.id}
                               className={cn(
                                 "p-4 rounded-lg cursor-pointer transition-all",
-                                currentTask?.id === task.id 
-                                  ? "bg-primary/10 border-2 border-primary" 
+                                currentTask?.id === task.id
+                                  ? "bg-primary/10 border-2 border-primary"
                                   : "bg-muted/50 hover:bg-muted border border-border"
                               )}
                               onClick={() => startTaskFocus(task)}
@@ -782,7 +706,7 @@ export function FocusSession() {
 
               {/* Sidebar */}
               <div className="space-y-6">
-                
+
                 {/* Session Stats */}
                 <Card>
                   <CardHeader>
@@ -804,7 +728,7 @@ export function FocusSession() {
                         <div className="text-sm text-muted-foreground">Focus Time</div>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Next Break</span>
@@ -849,7 +773,7 @@ export function FocusSession() {
                               <span className="text-sm text-muted-foreground self-center">min</span>
                             </div>
                           </div>
-                          
+
                           <div>
                             <Label className="text-sm">Break Duration</Label>
                             <div className="flex gap-2 mt-1">
@@ -864,7 +788,7 @@ export function FocusSession() {
                               <span className="text-sm text-muted-foreground self-center">min</span>
                             </div>
                           </div>
-                          
+
                           <Button onClick={applyCustomSettings} className="w-full">
                             Apply Timer Settings
                           </Button>
@@ -908,19 +832,7 @@ export function FocusSession() {
                           </Button>
                         </div>
 
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Label className="text-sm">Animations</Label>
-                            <p className="text-xs text-muted-foreground">Grid background effects</p>
-                          </div>
-                          <Button
-                            variant={animationsEnabled ? "default" : "outline"}
-                            size="sm"
-                            onClick={toggleAnimations}
-                          >
-                            {animationsEnabled ? 'On' : 'Off'}
-                          </Button>
-                        </div>
+
                       </div>
                     </div>
                   </CardContent>
@@ -1024,7 +936,7 @@ export function FocusSession() {
                     <h4 className="font-medium">Task Focus Mode</h4>
                     <div className="p-4 bg-muted/50 rounded-lg">
                       <p className="text-sm text-muted-foreground">
-                        In Task Focus mode, timer duration is determined by the estimated hours of your selected task. 
+                        In Task Focus mode, timer duration is determined by the estimated hours of your selected task.
                         Select a task from the list to start a focused work session.
                       </p>
                       {currentTask && (
@@ -1039,27 +951,10 @@ export function FocusSession() {
                   </div>
                 )}
 
-                {/* Visual Settings */}
+                {/* Sound Settings */}
                 <div className="space-y-4">
-                  <h4 className="font-medium">Visual & Sound Settings</h4>
+                  <h4 className="font-medium">Sound Settings</h4>
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Grid3X3 className="w-5 h-5 text-primary" />
-                        <div>
-                          <Label>Animated Grid Background</Label>
-                          <p className="text-xs text-muted-foreground">Enable animated grid effects</p>
-                        </div>
-                      </div>
-                      <Button
-                        variant={animationsEnabled ? "default" : "outline"}
-                        size="sm"
-                        onClick={toggleAnimations}
-                      >
-                        {animationsEnabled ? 'Enabled' : 'Disabled'}
-                      </Button>
-                    </div>
-
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         {soundEnabled ? (
@@ -1080,7 +975,7 @@ export function FocusSession() {
                         {soundEnabled ? 'Enabled' : 'Disabled'}
                       </Button>
                     </div>
-                    
+
                     {soundEnabled && (
                       <div className="flex gap-2">
                         <Button

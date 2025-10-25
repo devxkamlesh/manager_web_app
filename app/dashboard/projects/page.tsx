@@ -6,13 +6,20 @@ import { FolderOpen, Plus, Search, CalendarDays, Filter, List, Grid3X3, Columns3
 import { Button } from '@/components/ui/forms/button'
 import { Input } from '@/components/ui/forms/input'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/navigation/dropdown-menu'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useThemeStore } from '@/lib/theme-store'
+import { getIndianDate } from '@/lib/utils'
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]) // Today's date
+  const [selectedDate, setSelectedDate] = useState('')
+  const [isClient, setIsClient] = useState(false)
+  
+  useEffect(() => {
+    setIsClient(true)
+    setSelectedDate(getIndianDate())
+  }, [])
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'board'>('grid')
   const [statusFilter, setStatusFilter] = useState<'all' | 'planning' | 'active' | 'completed' | 'paused' | 'cancelled'>('all')
   const { color: themeColor } = useThemeStore()
@@ -20,7 +27,6 @@ export default function ProjectsPage() {
     setFilter: (filter: string) => void;
     setViewMode: (mode: 'list' | 'grid' | 'board') => void;
     setSearchQuery: (query: string) => void;
-    setSelectedDate: (date: string) => void;
   }>(null)
 
   return (
@@ -48,16 +54,14 @@ export default function ProjectsPage() {
           {/* Search and Filters */}
           <div className="flex items-center gap-4 mt-6">
             <div className="relative">
-              <CalendarDays className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
                 type="date"
                 value={selectedDate}
-                onChange={(e) => {
-                  setSelectedDate(e.target.value)
-                  projectManagerRef.current?.setSelectedDate(e.target.value)
-                }}
-                className="pl-10 w-48"
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="w-48 pl-10"
+                lang="hi-IN"
               />
+              <CalendarDays className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
             </div>
             
             <div className="relative flex-1 max-w-md">

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/layout/dialog"
 import { Button } from "@/components/ui/forms/button"
 import { Badge } from "@/components/ui/display/badge"
@@ -38,6 +38,11 @@ export function TaskViewDialog({
   onStartFocus,
   onStatusChange
 }: TaskViewDialogProps) {
+  const [isClient, setIsClient] = useState(false)
+  
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
   if (!task) return null
 
   const getPriorityColor = (priority: Task['priority']) => {
@@ -85,12 +90,6 @@ export function TaskViewDialog({
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
-            <button
-              onClick={() => onStatusChange(task.id, getNextStatus(task.status))}
-              className="hover:scale-110 transition-transform"
-            >
-              {getStatusIcon(task.status)}
-            </button>
             <span className={task.status === 'completed' ? 'line-through text-muted-foreground' : ''}>
               {task.title}
             </span>
@@ -179,7 +178,7 @@ export function TaskViewDialog({
                 })}
               </p>
             )}
-            <p>Created {formatTimeAgo(new Date(task.created_at))}</p>
+            <p>Created {isClient ? formatTimeAgo(new Date(task.created_at)) : 'recently'}</p>
           </div>
 
           {/* Actions */}

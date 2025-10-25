@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { TaskManager } from '@/components/tasks/task-manager'
 import { Sidebar } from '@/components/layout/sidebar'
 import { CreateTaskDialog } from '@/components/tasks/create-task-dialog'
@@ -18,6 +18,7 @@ import {
   Target
 } from 'lucide-react'
 import { useThemeStore } from '@/lib/theme-store'
+import { getIndianDate } from '@/lib/utils'
 import { Button } from '@/components/ui/forms/button'
 import { Input } from '@/components/ui/forms/input'
 import {
@@ -30,14 +31,19 @@ import {
 export default function TasksPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]) // Today's date
+  const [selectedDate, setSelectedDate] = useState('')
+  const [isClient, setIsClient] = useState(false)
+  
+  useEffect(() => {
+    setIsClient(true)
+    setSelectedDate(getIndianDate())
+  }, [])
   const { color: themeColor } = useThemeStore()
   const taskManagerRef = useRef<{ 
     refreshTasks: () => void; 
     setFilter: (filter: string) => void;
     setViewMode: (mode: 'list' | 'board' | 'grid') => void;
     setSearchQuery: (query: string) => void;
-    setSelectedDate: (date: string) => void;
   }>(null)
 
   return (
@@ -64,18 +70,23 @@ export default function TasksPage() {
           
           {/* Search and Filters */}
           <div className="flex items-center gap-4 mt-6">
-            <div className="relative">
-              <CalendarDays className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => {
-                  setSelectedDate(e.target.value)
-                  taskManagerRef.current?.setSelectedDate(e.target.value)
-                }}
-                className="pl-10 w-48"
-              />
-            </div>
+            {isClient ? (
+              <div className="relative">
+                <Input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="w-48 pl-10"
+                  lang="hi-IN"
+                />
+                <CalendarDays className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-lg w-48">
+                <CalendarDays className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm font-medium">Loading...</span>
+              </div>
+            )}
             
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -140,7 +151,11 @@ export default function TasksPage() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-6">
-          <TaskManager ref={taskManagerRef} selectedDate={selectedDate} />
+          <TaskManager 
+            ref={taskManagerRef} 
+            selectedDate={selectedDate}
+            onCreateTask={() => setShowCreateDialog(true)}
+          />
         </main>
       </div>
 

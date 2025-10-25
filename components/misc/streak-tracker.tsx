@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/layout/card"
+import { Badge } from "@/components/ui/display/badge"
 import { Code, BookOpen, GitCommit, Target, TrendingUp } from "lucide-react"
 import { getStreakEmoji } from "@/lib/utils"
 import { supabase } from "@/lib/supabase"

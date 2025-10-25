@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/display/badge"
 // Removed Supabase imports for local storage approach
 import { useToast } from "@/hooks/use-toast"
+import { getIndianDate } from "@/lib/utils"
 
 import { useTaskStore } from "@/lib/task-store"
 import { useCategoryStore } from "@/lib/category-store"
@@ -47,7 +48,7 @@ export function CreateTaskDialog({ open, onOpenChange, onTaskCreated }: CreateTa
     priority: 'medium' as 'low' | 'medium' | 'high',
     estimated_hours: '',
     due_date: '',
-    scheduled_date: new Date().toISOString().split('T')[0], // Default to today
+    scheduled_date: getIndianDate(), // Default to today (Indian date)
     scheduled_time: '09:00', // Default to 9 AM
     project_id: '',
     tags: ''
@@ -66,7 +67,7 @@ export function CreateTaskDialog({ open, onOpenChange, onTaskCreated }: CreateTa
       priority: 'medium', 
       estimated_hours: '', 
       due_date: '', 
-      scheduled_date: new Date().toISOString().split('T')[0],
+      scheduled_date: getIndianDate(),
       scheduled_time: '09:00',
       project_id: '',
       tags: '' 
@@ -170,7 +171,7 @@ export function CreateTaskDialog({ open, onOpenChange, onTaskCreated }: CreateTa
                 value={task.scheduled_date}
                 onChange={(e) => setTask(prev => ({ ...prev, scheduled_date: e.target.value }))}
                 className="mt-1"
-                min={new Date().toISOString().split('T')[0]}
+                min={getIndianDate()}
               />
             </div>
             
@@ -354,7 +355,7 @@ export function CreateTaskDialog({ open, onOpenChange, onTaskCreated }: CreateTa
               value={task.due_date}
               onChange={(e) => setTask(prev => ({ ...prev, due_date: e.target.value }))}
               className="mt-1"
-              min={new Date().toISOString().split('T')[0]}
+              min={getIndianDate()}
             />
           </div>
         </div>

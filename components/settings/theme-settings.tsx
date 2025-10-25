@@ -7,6 +7,22 @@ import { Badge } from "@/components/ui/display/badge"
 import { Separator } from "@/components/ui/layout/separator"
 import { Palette, Check, Moon } from "lucide-react"
 
+const getColorDescription = (colorKey: string) => {
+  const descriptions: Record<string, string> = {
+    default: 'Clean & minimal',
+    blue: 'Professional',
+    violet: 'Creative',
+    green: 'Natural',
+    orange: 'Energetic',
+    red: 'Bold',
+    pink: 'Playful',
+    yellow: 'Bright',
+    indigo: 'Deep',
+    teal: 'Calm'
+  }
+  return descriptions[colorKey] || 'Custom'
+}
+
 export function ThemeSettings() {
   const { color, setColor } = useThemeStore()
 
@@ -45,43 +61,45 @@ export function ThemeSettings() {
           {/* Color themes */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Color Themes</h3>
-            <div className="grid grid-cols-1 gap-3">
+            <p className="text-sm text-muted-foreground">Choose your preferred accent color for the interface</p>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {Object.entries(themeColors).map(([key, colorTheme]) => (
                 <Button
                   key={key}
-                  variant={color === key ? "default" : "outline"}
-                  className="w-full justify-start h-auto p-4"
+                  variant="ghost"
+                  className={`h-auto p-4 flex flex-col gap-3 relative transition-all duration-200 ${
+                    color === key 
+                      ? 'ring-2 ring-primary bg-primary/5 shadow-lg' 
+                      : 'hover:bg-muted/50 hover:shadow-md'
+                  }`}
                   onClick={() => setColor(key as ThemeColor)}
                 >
-                  <div className="flex items-center gap-4 w-full">
-                    {/* Color preview */}
-                    <div className="flex gap-1.5">
-                      <div 
-                        className="w-4 h-4 rounded-full border"
-                        style={{ backgroundColor: `hsl(${colorTheme.cssVars.dark['--primary']})` }}
-                      />
-                      <div 
-                        className="w-4 h-4 rounded-full border"
-                        style={{ backgroundColor: `hsl(${colorTheme.cssVars.dark['--secondary']})` }}
-                      />
-                      <div 
-                        className="w-4 h-4 rounded-full border"
-                        style={{ backgroundColor: `hsl(${colorTheme.cssVars.dark['--accent']})` }}
-                      />
+                  {/* Selection indicator */}
+                  {color === key && (
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                      <Check className="w-3 h-3 text-primary-foreground" />
                     </div>
-                    
-                    {/* Theme info */}
-                    <div className="flex-1 text-left">
-                      <div className="font-medium">{colorTheme.name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {key === 'default' && 'Clean and minimal design'}
-                        {key === 'blue' && 'Professional and trustworthy'}
-                        {key === 'violet' && 'Creative and modern'}
-                      </div>
+                  )}
+                  
+                  {/* Color preview circles */}
+                  <div className="flex justify-center gap-1">
+                    <div 
+                      className="w-6 h-6 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: `hsl(${colorTheme.cssVars.light['--primary']})` }}
+                    />
+                    <div 
+                      className="w-4 h-4 rounded-full border border-white shadow-sm self-center"
+                      style={{ backgroundColor: `hsl(${colorTheme.cssVars.light['--secondary']})` }}
+                    />
+                  </div>
+                  
+                  {/* Theme name */}
+                  <div className="text-center">
+                    <div className="font-medium text-sm">{colorTheme.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {getColorDescription(key)}
                     </div>
-                    
-                    {/* Selection indicator */}
-                    {color === key && <Check className="w-4 h-4" />}
                   </div>
                 </Button>
               ))}
